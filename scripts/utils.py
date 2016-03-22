@@ -93,3 +93,9 @@ def noaa_circ_average(context, attribute):
 						lambda x, value: (x[0]+value[0], x[1]+value[1]),\
 						lambda x,y: (x[0]+y[0], x[1]+y[1]))
 	return month_avg.map(lambda (label, (sin_sum, cos_sum)): (label, math.atan2(sin_sum, cos_sum)))
+
+def get_attribute(x, attribute):
+	if attribute in x:
+		return x[attribute]
+	else:
+		return None
