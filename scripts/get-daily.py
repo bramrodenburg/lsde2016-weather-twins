@@ -61,9 +61,17 @@ month_data = month_data.map(lambda (label, (x1, c1, x2, c2, x3, c3, x4, c4, x5a,
 		x1min, x2min, x3min, x4min, x1max, x2max, x3max, x4max)))
 month_data.persist()
 #month_data = month_data.coalesce(1, True)
+if len(argv) > 1 and argv[1] == '*':
+	c = (2015-1901)*12
+else:
+	c = 12
 
+month_data.partitionBy(c, lambda x: x[0][0]*100 + x[0][1])
+month_data.saveAsTextFile("%s%s-%s" % (hdfs_results_path, start_time, 'all'))
+'''
 for year in range(1901,2016):
 	for month in range(1,12+1):
 		year_month = month_data.filter(lambda x: x[0][0]==year and x[0][1]==month)
 		year_month.coalesce(1, True)
-		year_month.saveAsTextFile("%s%s-%s-%s-%s" % (hdfs_results_path, start_time, 'all', month, year))
+		year_month.saveAsTextFile("%s%s-%s-%s-%s" % (hdfs_results_path, start_time, 'all', year, month))
+'''
