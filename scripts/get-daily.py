@@ -17,8 +17,8 @@ stations = context.flatMap(lambda x: [utils.extract(record) for record in x.spli
 stations = stations.filter(lambda x: 'longitude' in x[1] and 'latitude' in x[1])
 
 # Do computations on month level
-month_data = stations.map(lambda x:((x[0][0], x[0][1], x[0][3]), (get_attribute(x[1], 'temp'), get_attribute(x[1], 'windspeed'), \
-			get_attribute(x[1], 'sky-condition'), get_attribute(x[1], 'visibility'), get_attribute(x[1], 'wind-direction'))))
+month_data = stations.map(lambda x:((x[0][0], x[0][1], x[0][3]), (utils.get_attribute(x[1], 'temp'), utils.get_attribute(x[1], 'windspeed'), \
+			utils.get_attribute(x[1], 'sky-condition'), utils.get_attribute(x[1], 'visibility'), utils.get_attribute(x[1], 'wind-direction'))))
 month_data = month_data.combineByKey(lambda value: (x[0] if x[0] != None else 0, 1 if x[0] != None else 0,\
 					x[1] if x[1] != None else 0, 1 if x[1] != None else 0, \
 					x[2] if x[2] != None else 0, 1 if x[2] != None else 0, \
