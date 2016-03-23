@@ -28,7 +28,7 @@ month_data = month_data.combineByKey(lambda value: (value[0] if value[0] != None
 					value[0]*value[0] if value[0] != None else 0, \
 					value[1]*value[1] if value[1] != None else 0, \
 					value[2]*value[2] if value[2] != None else 0, \
-					value[3]*value[3] if value[3] != None else 0)
+					value[3]*value[3] if value[3] != None else 0), \
 				lambda x, value: (utils.get_value(value[0]) + x[0], x[1] + 1, utils.get_value(value[1])+x[2], 1 + x[3], utils.get_value(value[2]) + x[4], 1 + x[5],\
 					utils.get_value(value[3])+x[6], 1 + x[7], (math.sin(value[4]*math.pi/180.0) if value[4]!=None else 0) + x[8], (math.cos(value[4]*math.pi/180.0) if value[4] != None else 0) + x[9], (value[0]*value[0] if value[0]!=None else 0) + x[10],\
 					(value[1]*value[1] if value[1]!=None else 0) + x[11],\
