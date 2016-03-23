@@ -7,7 +7,7 @@ from pyspark.context import SparkContext
 if (len(sys.argv) > 1):
 	hdfs_file_path = "/user/lsde02/data/%s/*.gz" % sys.argv[1]
 else:
-	hdfs_file_path = "/user/lsde02/data/1901/*.gz"
+	hdfs_file_path = "/user/lsde02/data/*/*.gz"
 hdfs_results_path = "/user/lsde02/results/"
 start_time = time.strftime("%Y-%m-%d-%H-%M-%S")
 
@@ -61,10 +61,10 @@ month_data = month_data.map(lambda (label, (x1, c1, x2, c2, x3, c3, x4, c4, x5a,
 		x1min, x2min, x3min, x4min, x1max, x2max, x3max, x4max)))
 month_data.persist()
 #month_data = month_data.coalesce(1, True)
-if len(sys.argv) > 1 and sys.argv[1] == '*':
-	c = (2015-1901)*12
-else:
+if len(sys.argv) > 1:
 	c = 12
+else:
+	c = (2016-1901)*12
 
 month_data = month_data.partitionBy(c, lambda x: x[0]*100 + x[1])
 month_data.saveAsTextFile("%s%s-%s" % (hdfs_results_path, start_time, 'all'))
