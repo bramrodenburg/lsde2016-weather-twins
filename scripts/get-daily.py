@@ -66,7 +66,7 @@ if len(sys.argv) > 1 and sys.argv[1] == '*':
 else:
 	c = 12
 
-month_data.partitionBy(c, lambda x: x[0][0]*100 + x[0][1])
+month_data = month_data.partitionBy(c, lambda x: x[0][0]*100 + x[0][1])
 month_data.saveAsTextFile("%s%s-%s" % (hdfs_results_path, start_time, 'all'))
 '''
 for year in range(1901,2016):
