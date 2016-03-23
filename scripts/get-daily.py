@@ -59,6 +59,7 @@ month_data = month_data.map(lambda (label, (x1, c1, x2, c2, x3, c3, x4, c4, x5a,
 		1.0/(c3-1)*(x3sq-2*(float(x3)/c3)*x3+c3*(float(x3)/c3)**2) if c3>1 else "NaN", \
 		1.0/(c4-1)*(x4sq-2*(float(x4)/c4)*x4+c4*(float(x4)/c4)**2) if c4>1 else "NaN", \
 		x1min, x2min, x3min, x4min, x1max, x2max, x3max, x4max)))
+month_data.persist()
 #month_data = month_data.coalesce(1, True)
 
 for year in range(1901,2016):
