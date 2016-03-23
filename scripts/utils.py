@@ -99,3 +99,9 @@ def get_attribute(x, attribute):
 		return x[attribute]
 	else:
 		return None
+
+def get_value(x):
+	if x == None:
+		return 0
+	else:
+		return x
