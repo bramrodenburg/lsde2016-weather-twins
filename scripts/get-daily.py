@@ -20,11 +20,11 @@ stations = stations.filter(lambda x: 'longitude' in x[1] and 'latitude' in x[1])
 month_data = stations.map(lambda x:((x[0][0], x[0][1], x[0][3]), (get_attribute(x[1], 'temp'), get_attribute(x[1], 'windspeed'), \
 			get_attribute(x[1], 'sky-condition'), get_attribute(x[1], 'visibility'), get_attribute(x[1], 'wind-direction'))))
 month_data = month_data.combineByKey(lambda value: (x[0] if x[0] != None else 0, 1 if x[0] != None else 0,\
-					x[1] if x[1] != None else 0, 1 if x[1] != None else 0 , \
+					x[1] if x[1] != None else 0, 1 if x[1] != None else 0, \
 					x[2] if x[2] != None else 0, 1 if x[2] != None else 0, \
 					x[3] if x[3] != None else 0, 1 if x[3] != None else 0, \
-					math.sin(x[4])*math.pi/180.0 if x[4] != None else 0, math.cos(x[4]).math.pi/180.0 if x[4] != None else 0, ))\
-				lambda x, value: (x[0] + value[0], value[1] + 1, x[2]+value[2], 1 + value[3], x[4] + value[4], 1 + value[5],\
+					math.sin(x[4])*math.pi/180.0 if x[4] != None else 0, math.cos(x[4]).math.pi/180.0 if x[4] != None else 0, ),\
+				lambda x, value: (x[0] + value[0], value[1] + 1, x[1]+value[2], 1 + value[3], x[3] + value[4], 1 + value[5],\
 					x[6]+value[6], 1 + value[7], x[8] + value[8], x[9] + value[9]),\
 				lambda x, y: (x[0]+y[0], x[1]+y[1], x[2]+y[2], x[3]+y[3], x[4]+y[4], x[5]+y[5], x[6]+y[6], x[7]+y[7], x[8]+y[8]\
 					x[9]+y[9])) 
