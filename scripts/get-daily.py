@@ -61,7 +61,7 @@ month_data = month_data.map(lambda (label, (x1, c1, x2, c2, x3, c3, x4, c4, x5a,
 		x1min, x2min, x3min, x4min, x1max, x2max, x3max, x4max)))
 month_data.persist()
 #month_data = month_data.coalesce(1, True)
-if len(argv) > 1 and argv[1] == '*':
+if len(sys.argv) > 1 and sys.argv[1] == '*':
 	c = (2015-1901)*12
 else:
 	c = 12
