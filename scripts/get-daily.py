@@ -6,13 +6,15 @@ from pyspark.context import SparkContext
 
 if (len(sys.argv) > 1):
 	hdfs_file_path = "/user/lsde02/data/%s/*.gz" % sys.argv[1]
+	forced_partitions = 12
 else:
 	hdfs_file_path = "/user/lsde02/data/*/*.gz"
+	forced_partitions = 1500
 hdfs_results_path = "/user/lsde02/results/"
 start_time = time.strftime("%Y-%m-%d-%H-%M-%S")
 
 sc = SparkContext()
-context = sc.textFile(hdfs_file_path, 1600)
+context = sc.textFile(hdfs_file_path, forced_partitions)
 stations = context.flatMap(lambda x: [utils.extract(record) for record in x.splitlines()])
 stations = stations.filter(lambda x: 'longitude' in x[1] and 'latitude' in x[1])
 
