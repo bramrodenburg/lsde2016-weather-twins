@@ -1,88 +1,439 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+<title>D3 World Map Template | TechSlides</title>
 <style>
-body {
-  background: #fcfcfa;
+*{font-family: Arial,Helvetica Neue,Helvetica,sans-serif;color:#01381d}
+
+
+.country:hover{
+  stroke: #fff;
+  stroke-width: 1.5px;
 }
-.stroke {
-  fill: none;
-  stroke: #000;
-  stroke-width: 3px;
+.text{
+  font-size:10px;
+  text-transform:capitalize;
+  font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
 }
-.fill {
-  fill: #fff;
+#wrapper{
+background-color:#b7f8dd;
+width:960px;
+}
+#wrapper p{
+padding-left:270px;
+}
+
+#wrapper h1{
+padding-left:225px;
+}
+#container {
+  position:relative;
+  background: #F0F8FF;
+  width:960px;
+  height:960px;
+  float:left;
+ 
+}
+.hidden { 
+  display: none; 
+}
+div.tooltip {
+  color: #222; 
+  background: #fff; 
+  padding: .5em; 
+  text-shadow: #f5f5f5 0 1px 0;
+  border-radius: 2px; 
+  box-shadow: 0px 0px 2px 0px #a6a6a6; 
+  opacity: 0.9; 
+  position: absolute;
 }
 .graticule {
   fill: none;
-  stroke: #777;
+  stroke: #bbb;
   stroke-width: .5px;
   stroke-opacity: .5;
 }
-.land {
-  fill: #222;
+.equator {
+  stroke: #ccc;
+  stroke-width: 1px;
 }
-.boundary {
-  fill: none;
-  stroke: #fff;
-  stroke-width: .5px;
+#menu{
+float:left;
+border-style:solid;
+border-width:3px;
+border-color:#53e6c3;
+background-color:#b7f8dd;
 }
+.form-group{
+padding:2px;
+
+}
+.form-control{
+border: 1px solid #01a47e; 
+    -webkit-border-radius: 30px; 
+    -moz-border-radius: 30px; 
+    border-radius: 30px; 
+    outline:0;  
+    padding-left:5px; 
+    padding-right:5px;
+
+}
+.button{
+    border: 1px solid #01a47e; 
+    -webkit-border-radius: 30px; 
+    -moz-border-radius: 30px; 
+    border-radius: 30px; 
+    outline:0;  
+    padding-left:5px; 
+    padding-right:5px;
+	background-color:#087246;
+}
+
+#result{
+
+}
+
+
+#result ul{
+
+border-top-style:solid;
+border-color:#53e6c3;
+border-width:3px;
+
+}
+#map-btn{
+}
+
 </style>
+</head>
 <body>
-<script src="//d3js.org/d3.v3.min.js"></script>
-<script src="//d3js.org/d3.geo.projection.v0.min.js"></script>
-<script src="//d3js.org/topojson.v1.min.js"></script>
-<b>Simalarity measures:</b><br />
-Temperature: <input type="checkbox"> # Hours of sun: <input type="checkbox"><br />
-Wind: <input type="checkbox"> Rain <input type="checkbox"><br />
-Origin month: <input type="text" />
-Target month: <input type="text" /><br />
-<input type="submit" value="Find me weather twins!">
+<div id="wrapper">
+<h1>WEATHER TWINS IN THE WORLD</h1>
+
+<p>
+Click on the map to get coordinates and weather information
+</p> 
+</div>
+<div id="container">
+ 
+  
+  
+ </div> 
+ <div id="menu">
+ <!-- <p>Use the scroll to zoom on map</p> -->
+  
+  <form action="javascript:evaluate()" method="post" class="myform"id ="myform">
+						
+							
+									<div id="month" class="form-group">
+										
+										<select class="form-control" required>
+				                        <option value="">Select Month</option>
+										<option value="1">Jenuary</option>
+										<option value="2">February</option>
+										<option value="3">March</option>
+										<option value="4">April</option>
+										<option value="5">May</option>
+										<option value="6">June</option>
+	    								<option value="7">July</option>
+										<option value="8">August</option>
+										<option value="9">September</option>
+										<option value="10">October</option>
+										<option value="11">November</option>
+										<option value="12">December</option>
+										</select>
+									
+									</div>
+								
+								
+									<div class="form-group">
+										<input name="year" id="year" placeholder="Year" class="form-control" type="text" maxlength="4" required>
+									</div>
+							<div class="form-group">
+								<input name="temperature" id="temperature" placeholder="Temperature" class="form-control" type="text" required>
+							</div>
+							<div class="form-group">
+								<input name="windspeed" id="windspeed" placeholder="Windspeed" class="form-control" type="text" required>
+							</div>	
+							<label>If weather info are unknown click on the map</label>
+							<div class="form-group">
+								
+								<input name="longitude" id="longitude" placeholder="Longitude" class="form-control" type="text" >
+							</div>
+							<div class="form-group">
+								<input name="latitude" id="latitude" placeholder="Latitude" class="form-control" type="text" >
+							</div>
+							<label>Nearest Station</label>
+							<div class="form-group">
+								
+								<input name="longitude" id="longitude1" placeholder="Longitude" class="form-control" type="text" >
+							</div>
+							<div class="form-group">
+								<input name="latitude" id="latitude1" placeholder="Latitude" class="form-control" type="text" >
+							</div>
+							
+							
+							<p><button class="button" name="submit" type="submit" >Submit</button></p>
+						
+  
+  
+  
+  
+  
+  
+  </form>
+  <div id="result">
+  
+  
+  
+  </div>
+
+  </div>
+ 
+
+<script src="js/d3.min.js"></script>
+<script src="js/topojson.v1.min.js"></script>
+<script src="js/jquery-2.2.2.min.js"></script>
+<script src="js/evaluate.js"></script>
 <script>
-var width = 960,
-    height = 580;
-var color = d3.scale.category10();
-var projection = d3.geo.kavrayskiy7()
-    .scale(170)
-    .translate([width / 2, height / 2])
-    .precision(.1);
-var path = d3.geo.path()
-    .projection(projection);
+d3.select(window).on("resize", throttle);
+
+var zoom = d3.behavior.zoom()
+    .scaleExtent([1, 9])
+    .on("zoom", move);
+	
+
+var width = document.getElementById('container').offsetWidth;
+var height = document.getElementById('container').offsetHeight;
+
+var topo,projection,path,svg,g;
+
 var graticule = d3.geo.graticule();
-var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height);
-svg.append("defs").append("path")
-    .datum({type: "Sphere"})
-    .attr("id", "sphere")
-    .attr("d", path);
-svg.append("use")
-    .attr("class", "stroke")
-    .attr("xlink:href", "#sphere");
-svg.append("use")
-    .attr("class", "fill")
-    .attr("xlink:href", "#sphere");
-svg.append("path")
-    .datum(graticule)
-    .attr("class", "graticule")
-    .attr("d", path);
-d3.json("maps/world-50m.json", function(error, world) {
-  if (error) throw error;
-  var countries = topojson.feature(world, world.objects.countries).features,
-      neighbors = topojson.neighbors(world.objects.countries.geometries);
-  svg.selectAll(".country")
-      .data(countries)
-    .enter().insert("path", ".graticule")
+
+var tooltip = d3.select("#container").append("div").attr("class", "tooltip hidden");
+
+setup(width,height);
+
+function setup(width,height){
+  projection = d3.geo.mercator()
+    .translate([(width/2), (height/2)])
+    .scale( width / 2 / Math.PI);
+
+  path = d3.geo.path().projection(projection);
+
+  svg = d3.select("#container").append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .call(zoom)
+	  .on("dblclick.zoom", null)//blocks the doubleclick event
+      .on("click", click)
+      .append("g");
+
+  g = svg.append("g");
+
+}
+
+d3.json("data/world-topo-min.json", function(error, world) {
+
+  var countries = topojson.feature(world, world.objects.countries).features;
+
+  topo = countries;
+  draw(topo);
+
+});
+
+function draw(topo) {
+
+  svg.append("path")
+     .datum(graticule)
+     .attr("class", "graticule")
+     .attr("d", path);
+
+
+  g.append("path")
+   .datum({type: "LineString", coordinates: [[-180, 0], [-90, 0], [0, 0], [90, 0], [180, 0]]})
+   .attr("class", "equator")
+   .attr("d", path);
+
+
+  var country = g.selectAll(".country").data(topo);
+
+  country.enter().insert("path")
       .attr("class", "country")
       .attr("d", path)
-      .style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return countries[n].color; }) + 1 | 0)
-; })
-	.on("mouseover", function(d, i) {
-		alert(d.name);
+      .attr("id", function(d,i) { return d.id; })
+      .attr("title", function(d,i) { return d.properties.name; })
+      .style("fill", function(d, i) { return d.properties.color; });
+
+  //offsets for tooltips
+  var offsetL = document.getElementById('container').offsetLeft+20;
+  var offsetT = document.getElementById('container').offsetTop+10;
+
+  //tooltips
+  country
+    .on("mousemove", function(d,i) {
+
+      var mouse = d3.mouse(svg.node()).map( function(d) { return parseInt(d); } );
+
+      tooltip.classed("hidden", false)
+             .attr("style", "left:"+(mouse[0]+offsetL)+"px;top:"+(mouse[1]+offsetT)+"px")
+             .html(d.properties.name);
+
+      })
+      .on("mouseout",  function(d,i) {
+        tooltip.classed("hidden", true);
+      }); 
+
+
+  //EXAMPLE: adding some capitals from external CSV file
+  d3.csv("data/country-capitals.csv", function(err, capitals) {
+
+    capitals.forEach(function(i){
+      addpoint(i.CapitalLongitude, i.CapitalLatitude, i.CapitalName );
+    });
+
+  });
+
+}
+
+
+function redraw() {
+  width = document.getElementById('container').offsetWidth;
+  height = width / 2;
+  d3.select('svg').remove();
+  setup(width,height);
+  draw(topo);
+}
+
+
+function move() {
+
+  var t = d3.event.translate;
+  var s = d3.event.scale; 
+  zscale = s;
+  var h = height/4;
+
+
+  t[0] = Math.min(
+    (width/height)  * (s - 1), 
+    Math.max( width * (1 - s), t[0] )
+  );
+
+  t[1] = Math.min(
+    h * (s - 1) + h * s, 
+    Math.max(height  * (1 - s) - h * s, t[1])
+  );
+
+  zoom.translate(t);
+  g.attr("transform", "translate(" + t + ")scale(" + s + ")");
+
+  //adjust the country hover stroke width based on zoom level
+  d3.selectAll(".country").style("stroke-width", 1.5 / s);
+
+}
+
+
+
+var throttleTimer;
+function throttle() {
+  window.clearTimeout(throttleTimer);
+    throttleTimer = window.setTimeout(function() {
+      redraw();
+    }, 200);
+}
+
+
+//geo translation ftom the pixel to latitute/longitude on mouse click in map
+function click() {
+
+var latlon = projection.invert(d3.mouse(this));
+ //console.log(latlon[1]);//send information on the console log about latitude and longitude
+ //console.log(latlon[0]);
+var example;
+var result;
+$(document).ready(function (){
+ var month = $('#month option:selected').val();
+ var year = $('#year').val();
+    if ((year) ==='' ||(month) ===''){    
+        alert('Select a month and year before choosing a point on the map.');
+        return false;
+    };   
+        $('#longitude').val(latlon[1]);
+        $('#latitude').val(latlon[0]);
+
+ example = year+"-"+month+".json"; //instantiate variable for reading file   
+     
 });
-  svg.insert("path", ".graticule")
-      .datum(topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; }))
-      .attr("class", "boundary")
-      .attr("d", path);
+ $.ajax({
+			url: example,
+			dataType: 'json',
+			success: function(data){
+			var lunghezza;
+			var distance;
+			var array= data;
+			var b;
+			for(var i=0; i < array.length; i++){//search for closest station
+				b = [array[i].longitude, array[i].latitude];
+				distance =d3.geo.distance(latlon,b);
+					if(lunghezza == undefined || distance < lunghezza){
+						lunghezza = distance;
+						result = array[i];
+					}
+			
+				}
+			$('#longitude1').val(result.longitude);
+            $('#latitude1').val(result.latitude);
+	        $('#temperature').val(result.temperature);
+			$('#windspeed').val(result.windspeed);
+					  }
+		    /*error: function(xhr, status, error) {//only 4 debug
+            alert(xhr.responseText);
+            console.log('strunz')
+			}*/
+	
+        
 });
-d3.select(self.frameElement).style("height", height + "px");
+
+}
+
+
+
+//function to add points and text to the map (used in plotting capitals)
+function addpoint(lat,lon,text) {
+
+  var gpoint = g.append("g").attr("class", "gpoint");
+  var x = projection([lat,lon])[0];
+  var y = projection([lat,lon])[1];
+
+  gpoint.append("svg:circle")
+        .attr("cx", x)
+        .attr("cy", y)
+        .attr("class","point")
+        .attr("r", 1.5);
+
+  //conditional in case a point has no associated text
+  if(text.length>0){
+
+    gpoint.append("text")
+          .attr("x", x+2)
+          .attr("y", y+2)
+          .attr("class","text")
+          .text(text);
+  }
+
+}
+$(function(){
+    $('#map-btn').click(function(event) {
+      var lat = $(this).data('lat');
+      var lng = $(this).data('lng');
+      showMap(lat,lng);
+    });
+});
+
+function showMap(lat,lng){
+   var url = "https://maps.google.com/?q=" + lat + "," + lng;
+   window.open(url);
+}
 </script>
+
+  </body>
+</html>
