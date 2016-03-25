@@ -1,95 +1,69 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<title>D3 World Map Template | TechSlides</title>
-<link rel="stylesheet" type="text/css" href="style.css" />
-<style>
-</style>
-</head>
-<body>
-<div id="wrapper">
-<h1>WEATHER TWINS IN THE WORLD</h1>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>D3 World Map Template | TechSlides</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+	</head>
 
-<p>
-Click on the map to get coordinates and weather information
-</p> 
-</div>
-<div id="container">
- 
+	<body>
+		<div id="wrapper">
+			<h1>WEATHER TWINS IN THE WORLD</h1>
+			<p>
+				Click on the map to get coordinates and weather information
+			</p> 
+		</div>
+		<div id="container"></div> 
+		<div id="menu">
+ 			<!-- <p>Use the scroll to zoom on map</p> -->
   
-  
- </div> 
- <div id="menu">
- <!-- <p>Use the scroll to zoom on map</p> -->
-  
-  <form action="javascript:evaluate()" method="post" class="myform"id ="myform">
-						
-							
-									<div id="month" class="form-group">
-										
-										<select class="form-control" required>
-				                        <option value="">Select Month</option>
-										<option value="1">Jenuary</option>
-										<option value="2">February</option>
-										<option value="3">March</option>
-										<option value="4">April</option>
-										<option value="5">May</option>
-										<option value="6">June</option>
-	    								<option value="7">July</option>
-										<option value="8">August</option>
-										<option value="9">September</option>
-										<option value="10">October</option>
-										<option value="11">November</option>
-										<option value="12">December</option>
-										</select>
-									
-									</div>
+  			<form action="javascript:evaluate()" method="post" class="myform"id ="myform">
+				<div id="month" class="form-group">						
+					<select class="form-control" required>
+				        	<option value="">Select Month</option>
+						<option value="1">Jenuary</option>
+						<option value="2">February</option>
+						<option value="3">March</option>
+						<option value="4">April</option>
+						<option value="5">May</option>
+						<option value="6">June</option>
+	    					<option value="7">July</option>
+						<option value="8">August</option>
+						<option value="9">September</option>
+						<option value="10">October</option>
+						<option value="11">November</option>
+						<option value="12">December</option>
+					</select>
+				</div>
 								
-								
-									<div class="form-group">
-										<input name="year" id="year" placeholder="Year" class="form-control" type="text" maxlength="4" required>
-									</div>
-							<div class="form-group">
-								<input name="temperature" id="temperature" placeholder="Temperature" class="form-control" type="text" required>
-							</div>
-							<div class="form-group">
-								<input name="windspeed" id="windspeed" placeholder="Windspeed" class="form-control" type="text" required>
-							</div>	
-							<label>If weather info are unknown click on the map</label>
-							<div class="form-group">
-								
-								<input name="longitude" id="longitude" placeholder="Longitude" class="form-control" type="text" >
-							</div>
-							<div class="form-group">
-								<input name="latitude" id="latitude" placeholder="Latitude" class="form-control" type="text" >
-							</div>
-							<label>Nearest Station</label>
-							<div class="form-group">
-								
-								<input name="longitude" id="longitude1" placeholder="Longitude" class="form-control" type="text" >
-							</div>
-							<div class="form-group">
-								<input name="latitude" id="latitude1" placeholder="Latitude" class="form-control" type="text" >
-							</div>
-							
-							
-							<p><button class="button" name="submit" type="submit" >Submit</button></p>
-						
-  
-  
-  
-  
-  
-  
-  </form>
-  <div id="result">
-  
-  
-  
-  </div>
+				<div class="form-group">
+					<input name="year" id="year" placeholder="Year" class="form-control" type="text" maxlength="4" required>
+				</div>
+				<div class="form-group">
+					<input name="temperature" id="temperature" placeholder="Temperature" class="form-control" type="text" required>
+				</div>
+				<div class="form-group">
+					<input name="windspeed" id="windspeed" placeholder="Windspeed" class="form-control" type="text" required>
+				</div>	
+				<label>If weather info are unknown click on the map</label>
+				<div class="form-group">
+					<input name="longitude" id="longitude" placeholder="Longitude" class="form-control" type="text" >
+				</div>
+				<div class="form-group">
+					<input name="latitude" id="latitude" placeholder="Latitude" class="form-control" type="text" >
+				</div>
+				<label>Nearest Station</label>
+				<div class="form-group">
+					<input name="longitude" id="longitude1" placeholder="Longitude" class="form-control" type="text" >
+				</div>
+				<div class="form-group">
+					<input name="latitude" id="latitude1" placeholder="Latitude" class="form-control" type="text" >
+				</div>
+				<p><button class="button" name="submit" type="submit" >Submit</button></p>
+  			</form>
+  			<div id="result"></div>
 
-  </div>
- 
-
+  		</div>
 <script src="js/d3.min.js"></script>
 <script src="js/topojson.v1.min.js"></script>
 <script src="js/jquery-2.2.2.min.js"></script>
