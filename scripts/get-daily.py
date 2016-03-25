@@ -2,7 +2,6 @@ import sys
 import time
 import math
 import utils
-import json
 from pyspark.context import SparkContext
 
 if (len(sys.argv) > 1):
@@ -69,5 +68,4 @@ else:
 	c = (2016-1901)*12
 
 month_data = month_data.partitionBy(c, lambda x: x[0]*100 + x[1])
-month_data = month_data.map(lambda x: json.dumps(x))
 month_data.saveAsTextFile("%s%s-%s" % (hdfs_results_path, start_time, 'all'))
