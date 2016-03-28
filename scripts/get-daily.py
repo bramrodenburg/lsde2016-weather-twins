@@ -24,11 +24,11 @@ else:
 # Keys: Names of attributes to be included
 # Values: 0: compute mean,variance,min,max, 1: compute circular mean
 ATTRIBUTES = { \
-	'temp' = 0,
-	'wind-speed' = 0,
-	'sky-condition' = 0,
-	'visibility' = 0,
-	'wind-direction' = 1
+	'temp' = 0,\
+	'wind-speed' = 0,\
+	'sky-condition' = 0,\
+	'visibility' = 0,\
+	'wind-direction' = 1\
 }
 
 hdfs_results_path = "/user/lsde02/results/"
