@@ -15,7 +15,7 @@ elif len(sys.argv) == 3:
 			directories += ","
 	directories += "}"
 	hdfs_file_path = "/user/lsde02/data/%s/*.gz" % directories
-	forced_partitions = (int(sys.argv[2])-int(sys.argv[1]))*12
+	forced_partitions = (int(sys.argv[2])+1-int(sys.argv[1]))*12
 else:
 	hdfs_file_path = "/user/lsde02/data/*/*.gz"
 	forced_partitions = 1500
