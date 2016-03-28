@@ -9,9 +9,9 @@ if (len(sys.argv) == 2):
 	forced_partitions = 12
 elif len(sys.argv) == 3:
 	directories = "{"
-	for i in range(int(sys.argv[2]), int(sys.argv[3])+1):
+	for i in range(int(sys.argv[1]), int(sys.argv[2])+1):
 		directories += i
-		if i < int(sys.argv[3]):
+		if i < int(sys.argv[2]):
 			directories += ","
 	directories += "}"
 	hdfs_file_path = "/user/lsde02/data/%s/*.gz" % directories
