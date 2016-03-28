@@ -38,7 +38,7 @@ print "Started processing: %s" % hdfs_file_path
 sc = SparkContext()
 context = sc.textFile(hdfs_file_path, forced_partitions)
 stations = context.flatMap(lambda x: [utils.extract(record) for record in x.splitlines()])
-stations = stations.filter(lambda x: 'fixed-weather-station' in x[1])
+#stations = stations.filter(lambda x: 'fixed-weather-station' in x[1] or )
 
 # Do computations on month level
 month_data = stations.map(lambda x:((x[0][0], x[0][1], x[0][3]), (utils.get_attribute(x[1], 'temp'), utils.get_attribute(x[1], 'windspeed'), \
@@ -88,7 +88,7 @@ month_data = month_data.map(lambda (label, (x1, c1, x2, c2, x3, c3, x4, c4, x5a,
 		1.0/(c3-1)*(x3sq-2*(float(x3)/c3)*x3+c3*(float(x3)/c3)**2) if c3>1 else "NaN", \
 		1.0/(c4-1)*(x4sq-2*(float(x4)/c4)*x4+c4*(float(x4)/c4)**2) if c4>1 else "NaN", \
 		x1min, x2min, x3min, x4min, x1max, x2max, x3max, x4max, \
-		float(x6)/c6 if c6>0 else "NaN", float(x7)/c7 if c7>0 else "NaN")))
+		float(x6)/c6/1000. if c6>0 else "NaN", float(x7)/c7/1000. if c7>0 else "NaN")))
 
 if len(sys.argv) == 2:
 	c = 12
