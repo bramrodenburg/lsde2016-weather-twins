@@ -4,14 +4,25 @@ import math
 import utils
 from pyspark.context import SparkContext
 
-if (len(sys.argv) > 1):
+if (len(sys.argv) == 2):
 	hdfs_file_path = "/user/lsde02/data/%s/*.gz" % sys.argv[1]
 	forced_partitions = 12
+elif len(sys.argv) == 3:
+	directories = "{"
+	for i in range(int(sys.argv[2]), int(sys.argv[3])+1):
+		directories += i
+		if i < int(sys.argv[3]):
+			directories += ","
+	directories += "}"
+	hdfs_file_path = "/user/lsde02/data/%s/*.gz" % directories
+	forced_partitions = (int(sys.argv[3])-int(sys.argv[2]))*12
 else:
 	hdfs_file_path = "/user/lsde02/data/*/*.gz"
 	forced_partitions = 1500
+
 hdfs_results_path = "/user/lsde02/results/"
 start_time = time.strftime("%Y-%m-%d-%H-%M-%S")
+print "Started processing: %s" % hdfs_file_path
 
 sc = SparkContext()
 context = sc.textFile(hdfs_file_path, forced_partitions)
@@ -62,8 +73,10 @@ month_data = month_data.map(lambda (label, (x1, c1, x2, c2, x3, c3, x4, c4, x5a,
 		1.0/(c4-1)*(x4sq-2*(float(x4)/c4)*x4+c4*(float(x4)/c4)**2) if c4>1 else "NaN", \
 		x1min, x2min, x3min, x4min, x1max, x2max, x3max, x4max)))
 
-if len(sys.argv) > 1:
+if len(sys.argv) == 2:
 	c = 12
+else if len(sys.argv) == 3:
+	c = int((sys.argv[2])-int(sys.argv[1])) * 12
 else:
 	c = (2016-1901)*12
 
