@@ -10,7 +10,7 @@ if (len(sys.argv) == 2):
 elif len(sys.argv) == 3:
 	directories = "{"
 	for i in range(int(sys.argv[1]), int(sys.argv[2])+1):
-		directories += i
+		directories += str(i)
 		if i < int(sys.argv[2]):
 			directories += ","
 	directories += "}"
