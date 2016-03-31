@@ -94,7 +94,7 @@ month_data = month_data.map(lambda (label, (x1, c1, x2, c2, x3, c3, x4, c4, x5a,
 if len(sys.argv) == 2:
 	c = 12
 elif len(sys.argv) == 3:
-	c = (int(sys.argv[2]+1)-int(sys.argv[1])) * 12
+	c = (int(sys.argv[2])+1-int(sys.argv[1])) * 12
 else:
 	c = (2016-1901)*12
 
