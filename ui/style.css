@@ -8,3 +8,17 @@ body {
 	margin: 0;
 	padding: 0;
 }
+
+.ui-control {
+	padding-top: 5px;
+	padding-left: 5px;
+	background-color: white;
+	opacity: 0.8;
+	width: 200px;
+	min-height: 160px;
+}
+
+.main-title {
+	color: white;
+	opacity: 0.8;
+}
