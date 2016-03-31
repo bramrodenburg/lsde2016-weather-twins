@@ -88,11 +88,14 @@ function showResetButton() {
 
 function euclideanDistance(x, y, properties) {
 	squaredSum = 0;
-	var test = 0;
 
 	for (var property in properties) {
 		property = properties[property];
-		squaredSum += Math.pow(x[property] - y[property], 2);
+		if (x.hasOwnProperty(property) && y.hasOwnProperty(property)) {
+			squaredSum += Math.pow(x[property] - y[property], 2);
+		} else {
+			return Number.MAX_VALUE;
+		}
 	}
 
 	return Math.sqrt(squaredSum);
@@ -106,33 +109,31 @@ function findSimilarWeatherStations(benchmarkStation, includedWeatherAttributes,
 		var test = 0;
 		for (var key in json) {
                 	var targetStation = json[key];
-			
-			if (test < 10) {
-				console.log('Target: ');
-				console.log(targetStation);
-				console.log('Origin: ');
-				console.log(benchmarkStation);
-			}
-
-			test++;
                 	var distance = euclideanDistance(benchmarkStation, targetStation, includedWeatherAttributes);
-                	if (distance < shortestDistance && targetStation['identifier']!=benchmarkStation['identifier']) {
+                	
+			if (distance < shortestDistance && targetStation['identifier']!=benchmarkStation['identifier'] 
+				&& targetStation.hasOwnProperty('latitude') && targetStation.hasOwnProperty('longitude')) {
                 	        mostSimilarStation = targetStation;
 				shortestDistance = distance;
                 	}
         	}
 
+		if (shortestDistance == Number.MAX_VALUE) {
+			window.alert("Unfortunately it was not possible to find a weather twin for this location. Please try a different location or a different combination of weather attributes.");
+			return;
+		}
+
 		clearMarkers();
 
 		// Code below adds two new markers that visualize the results
 	        var marker = L.marker([benchmarkStation.longitude/1000,  benchmarkStation.latitude/1000], getAttributes(benchmarkStation)).addTo(map);
-                var popupMessage = generatePopupMessage(benchmarkStation, numberOfMarkers)
+                var popupMessage = generatePopupMessage(benchmarkStation, numberOfMarkers, false)
                 marker.bindPopup(popupMessage);
                 markers.push(marker);
                 numberOfMarkers++;
 
 	        marker = L.marker([mostSimilarStation.longitude/1000,  mostSimilarStation.latitude/1000], getAttributes(mostSimilarStation)).addTo(map);
-                popupMessage = generatePopupMessage(mostSimilarStation, numberOfMarkers)
+                popupMessage = generatePopupMessage(mostSimilarStation, numberOfMarkers, false);
                 marker.bindPopup(popupMessage);
                 markers.push(marker);
                 numberOfMarkers++;
@@ -200,14 +201,16 @@ function propertyToText(station, property) {
 	return "<b>" + name + "</b> : " + value + " " + unit + "<br />";
 }
 
-function generatePopupMessage(station, numberOfMarkers) {
+function generatePopupMessage(station, numberOfMarkers, showButton) {
 	var result = "";
 	for (var property in properties) {
 		property = properties[property];
 		result += propertyToText(station, property);
 	}
-
-	result += '<button onClick="findWeatherTwins(' + numberOfMarkers + ')">Find weather twins!</button>';
+	
+	if (showButton==true) {
+		result += '<button onClick="findWeatherTwins(' + numberOfMarkers + ')">Find weather twins!</button>';
+	}
 
 	return result;
 
@@ -235,7 +238,7 @@ function plotStation(station) {
                 var longitude = station['longitude']/1000;
                 
 		var marker = L.marker([longitude,  latitude], getAttributes(station)).addTo(map);
-		var popupMessage = generatePopupMessage(station, numberOfMarkers)
+		var popupMessage = generatePopupMessage(station, numberOfMarkers, true)
                 marker.bindPopup(popupMessage);
 		markers.push(marker);
 		numberOfMarkers++;
