@@ -2,7 +2,7 @@ import sys
 import os
 import json
 
-FIELDS = [('identifier', 2), ('latitude', 3), ('longitude', 4), ('avg-temp', 5), ('avg-wind-speed', 6)]
+FIELDS = [('identifier', 2), ('latitude', 3), ('longitude', 4), ('avg-temp', 5), ('avg-wind-speed', 6), ('var-temp', ), ('min-temp'), ('max-temp')]
 
 '''
 Helper functions
@@ -29,23 +29,27 @@ def process_line(line):
 	for field in FIELDS:
 		process_field(result, field, line)
 
-	return result
+	name = "%s-%s" % (line[0].strip(), line[1].strip())
+	return (result, name)
+
+def get_name(fh):
+	return 
 
 def convert_to_json(fh):
 	result = []
 
 	for line in fh:
-		entry = process_line(line)
+		(entry, name) = process_line(line)
 		result.append(entry)
 
-	return json.dumps(result)
+	return (name, json.dumps(result))
 
 def convert_file(file_name):
 	fh = open(file_name, 'r')
-	json_output = convert_to_json(fh)
+	(json_output, name) = convert_to_json(fh)
 	fh.close()
 	
-	return json_output
+	return (json_output, name)
 
 '''
 Actual program
@@ -56,5 +60,5 @@ if len(sys.argv) < 2:
 
 for i in range(1,len(sys.argv)):
 	file_name = sys.argv[i]
-	json_output = convert_file(file_name)
-	store_output(json_output, "%s.json" % file_name)
+	(json_output, new_file_name) = convert_file(file_name)
+	store_output(json_output, "%s.json" % new_file_name)
