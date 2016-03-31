@@ -35,7 +35,10 @@ def process_line(line, extracted_month_year):
 	if extracted_month_year:
         	return result
 	else:
-		return (result, int(line[0]), int(line[1]))
+		try:
+			return (result, int(line[0]), int(line[1]))
+		except:
+			return (0, "Error", 0)
 
 def convert_to_json(fh):
 	result = []
@@ -47,7 +50,8 @@ def convert_to_json(fh):
 		else:
 			(line, year, month) = process_line(line, extracted_year_month)
 			extracted_year_month = True
-
+			if year == "Error":
+				return
 		result.append(line)
 
 	return (json.dumps(line), year, month)
