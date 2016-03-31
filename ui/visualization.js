@@ -14,6 +14,7 @@ var DEFAULT_PROPERTIES = [['Avg. Temperature', '&#8451;','avg-temp'], ['Avg. Win
 var map = L.map('mapid').setView(INITIAL_CENTER, INITIAL_ZOOM_LEVEL);
 var properties = DEFAULT_PROPERTIES;
 var markers = [];
+var numberOfMarkers = 0;
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 	attribution: MAP_ATTRIBUTION,
@@ -54,11 +55,127 @@ var MainTitleControl = L.Control.extend({
 
 map.addControl(new MainTitleControl());
 
+var resetButton;
+
+function resetMap() {
+	clearMarkers();
+
+	var originYear = Number($("#origin-year").find(":checked").val());
+        var originMonth = Number($("#origin-month").find(":checked").val());	
+
+	loadWeatherStations(originYear, originMonth, plotStations);
+	resetButton.removeFrom(map);
+}
+
+function showResetButton() {
+	var ResetControl = L.Control.extend({
+		options: {
+		position: 'bottomright'
+	},
+
+	onAdd: function(map) {
+		var container = L.DomUtil.create('div', 'reset-button');
+
+		container.innerHTML += "<a href=\"#\" onclick=\"resetMap()\"><h1>Click here to reset</h1></a>";
+
+		return container;
+	}});
+
+	resetButton = new ResetControl();
+
+	map.addControl(resetButton);
+}
+
+function euclideanDistance(x, y, properties) {
+	squaredSum = 0;
+	var test = 0;
+
+	for (var property in properties) {
+		property = properties[property];
+		squaredSum += Math.pow(x[property] - y[property], 2);
+	}
+
+	return Math.sqrt(squaredSum);
+
+}
+
+function findSimilarWeatherStations(benchmarkStation, includedWeatherAttributes, targetYear, targetMonth) {
+	var mostSimilarStation;
+	loadWeatherStations(targetYear, targetMonth, function(json) {
+		var shortestDistance = Number.MAX_VALUE;
+		var test = 0;
+		for (var key in json) {
+                	var targetStation = json[key];
+			
+			if (test < 10) {
+				console.log('Target: ');
+				console.log(targetStation);
+				console.log('Origin: ');
+				console.log(benchmarkStation);
+			}
+
+			test++;
+                	var distance = euclideanDistance(benchmarkStation, targetStation, includedWeatherAttributes);
+                	if (distance < shortestDistance && targetStation['identifier']!=benchmarkStation['identifier']) {
+                	        mostSimilarStation = targetStation;
+				shortestDistance = distance;
+                	}
+        	}
+
+		clearMarkers();
+
+		// Code below adds two new markers that visualize the results
+	        var marker = L.marker([benchmarkStation.longitude/1000,  benchmarkStation.latitude/1000], getAttributes(benchmarkStation)).addTo(map);
+                var popupMessage = generatePopupMessage(benchmarkStation, numberOfMarkers)
+                marker.bindPopup(popupMessage);
+                markers.push(marker);
+                numberOfMarkers++;
+
+	        marker = L.marker([mostSimilarStation.longitude/1000,  mostSimilarStation.latitude/1000], getAttributes(mostSimilarStation)).addTo(map);
+                popupMessage = generatePopupMessage(mostSimilarStation, numberOfMarkers)
+                marker.bindPopup(popupMessage);
+                markers.push(marker);
+                numberOfMarkers++;
+		// End of new marker visualization
+		showResetButton();
+	});
+}
+
+function getSelectedAttributes() {
+	var results = [];
+
+	for (var property in DEFAULT_PROPERTIES) {
+		property = DEFAULT_PROPERTIES[property];
+		if ($("#attributes-field #" + property[2]).is(':checked')) {
+			results.push(property[2]);
+		}
+	}
+
+	return results;
+}
+
+function findWeatherTwins(markerID) {
+	var targetYear = Number($("#target-year").find(":checked").val());
+	var targetMonth = Number($("#target-month").find(":checked").val());
+
+	var includedWeatherAttributes = getSelectedAttributes();
+	if (includedWeatherAttributes.length == 0) {
+		console.log("Please include at least one attribute for weather comparison.");
+	}
+
+	console.log("ID: " + markerID);
+	console.log(markers[markerID]);
+	var originStation = markers[markerID].options.station;
+	console.log(originStation);
+	var similarWeatherStations = findSimilarWeatherStations(originStation, includedWeatherAttributes, targetYear, targetMonth);
+}
+
 function clearMarkers() {
 	for (var marker in markers) {
 		marker = markers[marker];
 		map.removeLayer(marker);
 	}
+	numberOfMarkers = 0;
 }
 
 function loadWeatherStations(year, month, callback) {
@@ -83,25 +200,45 @@ function propertyToText(station, property) {
 	return "<b>" + name + "</b> : " + value + " " + unit + "<br />";
 }
 
-function generatePopupMessage(station) {
+function generatePopupMessage(station, numberOfMarkers) {
 	var result = "";
 	for (var property in properties) {
 		property = properties[property];
 		result += propertyToText(station, property);
 	}
 
+	result += '<button onClick="findWeatherTwins(' + numberOfMarkers + ')">Find weather twins!</button>';
+
 	return result;
 
+}
+
+function getAttributes(station) {
+	result = {};
+
+	for (var property in properties) {
+		property = properties[property][2];
+		if (station.hasOwnProperty(property) && property != "NaN") {
+			result[property] = Number(station[property]);
+		} 
+	}
+
+	result['identifier'] = station['identifier'];
+	result['longitude'] = station['longitude'];
+	result['latitude'] = station['latitude'];
+	
+	return {station: result};
 }
 
 function plotStation(station) {
                 var latitude = station['latitude']/1000;
                 var longitude = station['longitude']/1000;
                 
-		var marker = L.marker([longitude,  latitude]).addTo(map);
-		var popupMessage = generatePopupMessage(station)
+		var marker = L.marker([longitude,  latitude], getAttributes(station)).addTo(map);
+		var popupMessage = generatePopupMessage(station, numberOfMarkers)
                 marker.bindPopup(popupMessage);
 		markers.push(marker);
+		numberOfMarkers++;
 }
 
 function plotStations(json) {

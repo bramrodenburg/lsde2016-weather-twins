@@ -22,3 +22,9 @@ body {
 	color: white;
 	opacity: 0.8;
 }
+
+.reset-button a {
+	color: red;
+	text-decoration: none;
+	opacity: 0.8;
+}

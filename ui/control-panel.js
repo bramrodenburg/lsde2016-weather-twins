@@ -3,11 +3,28 @@ LAST_YEAR = 2015;
 
 MONTHS = {"January":1, "February":2, "March":3, "April":4, "May":5, "June":6, "July": 7, "August": 8, "September": 9, "October":10, "November":11, "December":12};
 
+function loadWeatherAttributes(attributes) {
+	for (var attribute in attributes) {
+		attribute = attributes[attribute];
+
+		$("#attributes-field").append(attribute[0] + ':<input type="checkbox" id="' + attribute[2] + '"/><br />');
+		$("#attributes-field #" + attribute[2]).prop('checked', true);
+		$("#attributes-field #" + attribute[2]).click(function(x) {
+			if ($(this).is(':checked')) {
+				$(this).prop(':checked', false);
+				console.log("Uncheck!");
+			} else {
+				$(this).prop(':checked', true);
+				console.log("CHECK!");
+			}
+		});
+		console.log(attribute);
+	}
+}
+
 function changeData(origin) {	
 	var originYear = $("#origin-year").find(":checked").val();
 	var originMonth = $("#origin-month").find(":checked").val();
-	console.log(originYear);
-	console.log(originMonth);
 	loadWeatherStations(originYear, originMonth, plotStations);
 }
 
@@ -57,6 +74,7 @@ function populateControlPanel() {
 	//$("#origin-month").on('change', function() {alert($(this).find(":checked").val());});
 	//$("#target-year").on('change', function() {alert($(this).find(":checked").val());});
 	//$("#target-month").on('change', function() {alert($(this).find(":checked").val());});
+	loadWeatherAttributes(DEFAULT_PROPERTIES);
 }
 
 populateControlPanel();
