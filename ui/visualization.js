@@ -13,6 +13,7 @@ var DEFAULT_PROPERTIES = [['Avg. Temperature', '&#8451;','avg-temp'], ['Avg. Win
 
 var map = L.map('mapid').setView(INITIAL_CENTER, INITIAL_ZOOM_LEVEL);
 var properties = DEFAULT_PROPERTIES;
+var markers = [];
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 	attribution: MAP_ATTRIBUTION,
@@ -52,6 +53,13 @@ var MainTitleControl = L.Control.extend({
 });
 
 map.addControl(new MainTitleControl());
+
+function clearMarkers() {
+	for (var marker in markers) {
+		marker = markers[marker];
+		map.removeLayer(marker);
+	}
+}
 
 function loadWeatherStations(year, month, callback) {
 	var filePath = "data/" + year + "/" + year + "-" + month + ".json";
@@ -93,9 +101,11 @@ function plotStation(station) {
 		var marker = L.marker([longitude,  latitude]).addTo(map);
 		var popupMessage = generatePopupMessage(station)
                 marker.bindPopup(popupMessage);
+		markers.push(marker);
 }
 
 function plotStations(json) {
+	clearMarkers();
 	var max = 0;
 	for (var key in json) {
 		var station = json[key];
