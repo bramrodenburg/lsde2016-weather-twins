@@ -93,10 +93,13 @@ month_data = month_data.map(lambda (label, (x1, c1, x2, c2, x3, c3, x4, c4, x5a,
 
 if len(sys.argv) == 2:
 	c = 12
+	name = sys.argv[1]
 elif len(sys.argv) == 3:
 	c = (int(sys.argv[2])+1-int(sys.argv[1])) * 12
+	name = sys.argv[1] + "-" + sys.argv[2]
 else:
 	c = (2016-1901)*12
+	name = "all"
 
 month_data = month_data.partitionBy(c, lambda x: x[0]*100 + x[1])
-month_data.saveAsTextFile("%s%s-%s" % (hdfs_results_path, start_time, 'all'))
+month_data.saveAsTextFile("%s%s-%s" % (hdfs_results_path, start_time, name))
