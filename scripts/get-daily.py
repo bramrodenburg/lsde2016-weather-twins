@@ -78,7 +78,7 @@ month_data = month_data.combineByKey(lambda value: (value[0] if value[0] != None
 					(max(value[2],x[20]) if value[2]!= None else x[20]),\
 					(max(value[3],x[21]) if value[3]!= None else x[21]),\
 					utils.get_value(value[5]) + x[22], 1 + x[23], \
-					utils.get_value(value[6]) + x[24], 1 + x[25])\
+					utils.get_value(value[6]) + x[24], 1 + x[25]),\
 				lambda x, y: (x[0]+y[0], x[1]+y[1], x[2]+y[2], x[3]+y[3], x[4]+y[4], x[5]+y[5], x[6]+y[6], x[7]+y[7], x[8]+y[8],\
 					x[9]+y[9], x[10]+y[10], x[11]+y[11], x[12]+y[12], x[13]+y[13], min(x[14], y[14]), min(x[15], y[15]), min(x[16], y[16]), \
 					min(x[17], y[17]), max(x[18], y[18]), max(x[19], y[19]), max(x[20], y[20]), max(x[21], y[21]), x[22]+y[22], x[23]+y[23], x[24]+y[24], x[25]+y[25])) 
