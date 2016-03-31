@@ -1,73 +1,191 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title>D3 World Map Template | TechSlides</title>
-		<link rel="stylesheet" type="text/css" href="style.css" />
-	</head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>D3 World Map Template | TechSlides</title>
+<style>
 
-	<body>
-		<div id="wrapper">
-			<h1>WEATHER TWINS IN THE WORLD</h1>
-			<p>
-				Click on the map to get coordinates and weather information
-			</p> 
-		</div>
-		<div id="container"></div> 
-		<div id="menu">
- 			<!-- <p>Use the scroll to zoom on map</p> -->
+
+
+.country:hover{
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+.text{
+  font-size:10px;
+  text-transform:capitalize;
+  font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
+}
+
+.text1{
+  font-size:10px;
+  text-transform:capitalize;
+  font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
+  width:100%;
+  height:100%;
+  display:none;
+}
+
+
+#tit{
+    border-radius: 25px;
+    background: #337ab7;
+    width: 100%;;
+    height: 100%;
+
+}
+#tit h1{
+padding-left:72.5px;
+color:white;
+}
+
+#aroundtit p{
+text-align:center;
+}
+
+
+#container {
+  position:relative;
+  background: #F0F8FF;
+  width:100%;
+  height:960px;
+  float:left;
+ 
+}
+.hidden { 
+  display: none; 
+}
+div.tooltip {
+  color: #222; 
+  background: #fff; 
+  padding: .5em; 
+  text-shadow: #f5f5f5 0 1px 0;
+  border-radius: 2px; 
+  box-shadow: 0px 0px 2px 0px #a6a6a6; 
+  opacity: 0.9; 
+  position: absolute;
+}
+.graticule {
+  fill: none;
+  stroke: #bbb;
+  stroke-width: .5px;
+  stroke-opacity: .5;
+}
+.equator {
+  stroke: #ccc;
+  stroke-width: 1px;
+}
+#menu{
+float:left;
+border-width:1px;
+border-radius:15px;
+border-style:solid;
+margin-left:1px;
+padding-top:2px;
+
+}
+#map{
+border-width:1px;
+border-radius:15px;
+border-style:solid;
+}
+
+</style>
+<link rel="stylesheet" href="js/bootstrap/bootstrap-3.3.6-dist/css/bootstrap.css">
+</head>
+<body>
+<div id="aroundtit" class="col-sm-6 col-sm-offset-3">
+<div id="tit">
+<h1>WEATHER TWINS IN THE WORLD</h1>
+</div>
+ 
+</div>
+ <div id="map" class="col-sm-8">
+<div id="container">
+ 
   
-  			<form action="javascript:evaluate()" method="post" class="myform"id ="myform">
-				<div id="month" class="form-group">						
-					<select class="form-control" required>
-				        	<option value="">Select Month</option>
-						<option value="1">Jenuary</option>
-						<option value="2">February</option>
-						<option value="3">March</option>
-						<option value="4">April</option>
-						<option value="5">May</option>
-						<option value="6">June</option>
-	    					<option value="7">July</option>
-						<option value="8">August</option>
-						<option value="9">September</option>
-						<option value="10">October</option>
-						<option value="11">November</option>
-						<option value="12">December</option>
-					</select>
-				</div>
+  
+ </div>
+</div>  
+ <div id ="menu" class="col-sm-2">
+ 
+ <!-- <p>Use the scroll to zoom on map</p> -->
+  
+  <form action="javascript:evaluate()" method="post" class="myform"id ="myform">
+						
+							
+									
+							<div class="form-group">
+								<input name="temperature" id="temperature" placeholder="Temperature" class="form-control" type="text" required>
+							</div>
+							<div class="form-group">
+								<input name="windspeed" id="windspeed" placeholder="Windspeed" class="form-control" type="text" required>
+							</div>	
+							<label>If weather info are unknown click on the map to get coordinates and weather information</label>
+							<div id="month" class="form-group">
+										
+										<select class="form-control">
+				                        <option value="">Select Month</option>
+										<option value="1">Jenuary</option>
+										<option value="2">February</option>
+										<option value="3">March</option>
+										<option value="4">April</option>
+										<option value="5">May</option>
+										<option value="6">June</option>
+	    								<option value="7">July</option>
+										<option value="8">August</option>
+										<option value="9">September</option>
+										<option value="10">October</option>
+										<option value="11">November</option>
+										<option value="12">December</option>
+										</select>
+									
+									</div>
 								
-				<div class="form-group">
-					<input name="year" id="year" placeholder="Year" class="form-control" type="text" maxlength="4" required>
-				</div>
-				<div class="form-group">
-					<input name="temperature" id="temperature" placeholder="Temperature" class="form-control" type="text" required>
-				</div>
-				<div class="form-group">
-					<input name="windspeed" id="windspeed" placeholder="Windspeed" class="form-control" type="text" required>
-				</div>	
-				<label>If weather info are unknown click on the map</label>
-				<div class="form-group">
-					<input name="longitude" id="longitude" placeholder="Longitude" class="form-control" type="text" >
-				</div>
-				<div class="form-group">
-					<input name="latitude" id="latitude" placeholder="Latitude" class="form-control" type="text" >
-				</div>
-				<label>Nearest Station</label>
-				<div class="form-group">
-					<input name="longitude" id="longitude1" placeholder="Longitude" class="form-control" type="text" >
-				</div>
-				<div class="form-group">
-					<input name="latitude" id="latitude1" placeholder="Latitude" class="form-control" type="text" >
-				</div>
-				<p><button class="button" name="submit" type="submit" >Submit</button></p>
-  			</form>
-  			<div id="result"></div>
+								
+									<div class="form-group">
+										<input name="year" id="year" placeholder="Year" class="form-control" type="text" maxlength="4">
+									</div>
+							<div class="form-group">
+								
+								<input name="longitude" id="longitude" placeholder="Longitude" class="form-control" type="text" >
+							</div>
+							<div class="form-group">
+								<input name="latitude" id="latitude" placeholder="Latitude" class="form-control" type="text" >
+							</div>
+							<label>Nearest Station</label>
+							<div class="form-group">
+								
+								<input name="longitude" id="longitude1" placeholder="Longitude" class="form-control" type="text" >
+							</div>
+							<div class="form-group">
+								<input name="latitude" id="latitude1" placeholder="Latitude" class="form-control" type="text" >
+							</div>
+							
+							
+							<p><button class="btn btn-primary" name="submit" type="submit" >Submit</button></p>
+						
+  
+  
+  
+  
+  
+  
+  </form>
+  <div id="result">
+  
+  
+  
+  </div>
 
-  		</div>
+  </div>
+ <script src="js/jquery-2.2.2.min.js"></script>
+ <script type="text/javascript" src="js/bootstrap/bootstrap-3.3.6-dist/js/bootstrap.js"></script>
+
 <script src="js/d3.min.js"></script>
 <script src="js/topojson.v1.min.js"></script>
-<script src="js/jquery-2.2.2.min.js"></script>
+
 <script src="js/evaluate.js"></script>
+
 <script>
 d3.select(window).on("resize", throttle);
 
@@ -218,7 +336,6 @@ function throttle() {
 
 //geo translation ftom the pixel to latitute/longitude on mouse click in map
 function click() {
-
 var latlon = projection.invert(d3.mouse(this));
  //console.log(latlon[1]);//send information on the console log about latitude and longitude
  //console.log(latlon[0]);
@@ -228,7 +345,7 @@ $(document).ready(function (){
  var month = $('#month option:selected').val();
  var year = $('#year').val();
     if ((year) ==='' ||(month) ===''){    
-        alert('Select a month and year before choosing a point on the map.');
+        alert('If you need hints select a month and year before choosing a point on the map.');
         return false;
     };   
         $('#longitude').val(latlon[1]);
@@ -295,18 +412,7 @@ function addpoint(lat,lon,text) {
   }
 
 }
-$(function(){
-    $('#map-btn').click(function(event) {
-      var lat = $(this).data('lat');
-      var lng = $(this).data('lng');
-      showMap(lat,lng);
-    });
-});
 
-function showMap(lat,lng){
-   var url = "https://maps.google.com/?q=" + lat + "," + lng;
-   window.open(url);
-}
 </script>
 
   </body>
