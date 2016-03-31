@@ -88,7 +88,14 @@ month_data = month_data.map(lambda (label, (x1, c1, x2, c2, x3, c3, x4, c4, x5a,
 		1.0/(c2-1)*(x2sq-2*(float(x2)/c2)*x2+c2*(float(x2)/c2)**2) if c2>1 else "NaN", \
 		1.0/(c3-1)*(x3sq-2*(float(x3)/c3)*x3+c3*(float(x3)/c3)**2) if c3>1 else "NaN", \
 		1.0/(c4-1)*(x4sq-2*(float(x4)/c4)*x4+c4*(float(x4)/c4)**2) if c4>1 else "NaN", \
-		x1min, x2min, x3min, x4min, x1max, x2max, x3max, x4max, \
+		x1min if x1min != sys.maxint else "NaN",\
+		x2min if x2min != sys.maxint else "NaN",\
+		x3min if x3min != sys.maxint else "NaN",\
+		x4min if x4min != sys.maxint else "NaN",\
+		x1max if x1max != -sys.maxint-1 else "NaN", \
+		x2max if x2max != -sys.maxint-1 else "NaN", \
+		x3max if x3max != -sys.maxint-1 else "NaN", \
+		x4max if x4max != -sys.maxint-1 else "NaN", \
 		float(x6)/c6/1000. if c6>0 else "NaN", float(x7)/c7/1000. if c7>0 else "NaN")))
 
 if len(sys.argv) == 2:
