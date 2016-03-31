@@ -4,6 +4,8 @@ import math
 import utils
 from pyspark.context import SparkContext
 
+MIN_NUM_OF_MONTHLY_OBSERVATIONS = 30
+
 if (len(sys.argv) == 2):
 	hdfs_file_path = "/user/lsde02/data/%s/*.gz" % sys.argv[1]
 	forced_partitions = 12
@@ -75,7 +77,7 @@ month_data = month_data.combineByKey(lambda value: (value[0] if value[0] != None
 				lambda x, y: (x[0]+y[0], x[1]+y[1], x[2]+y[2], x[3]+y[3], x[4]+y[4], x[5]+y[5], x[6]+y[6], x[7]+y[7], x[8]+y[8],\
 					x[9]+y[9], x[10]+y[10], x[11]+y[11], x[12]+y[12], x[13]+y[13], min(x[14], y[14]), min(x[15], y[15]), min(x[16], y[16]), \
 					min(x[17], y[17]), max(x[18], y[18]), max(x[19], y[19]), max(x[20], y[20]), max(x[21], y[21]), x[22]+y[22], x[23]+y[23], x[24]+y[24], x[25]+y[25], x[26]+y[26], x[27]+y[27])) 
-month_data = month_data.filter(lambda (label, data): min(data[23], data[25]) >= 30)
+month_data = month_data.filter(lambda (label, data): min(data[23], data[25]) >= MIN_NUM_OF_MONTHLY_OBSERVATIONS)
 month_data = month_data.map(lambda (label, (x1, c1, x2, c2, x3, c3, x4, c4, x5a, x5b, x1sq, x2sq, x3sq, x4sq, x1min, x2min, x3min, x4min, x1max, x2max, x3max, x4max, x6, c6, x7, c7, x6sq, x7sq)): (label, (float(x1)/c1 if c1>0 else "NaN", float(x2)/c2 if c2>0 else "NaN", float(x3)/c3 if c3>0 else "NaN", float(x4)/c4 if c4>0 else "NaN", math.atan2(x5a, x5b),\
 		1.0/(c1-1)*(x1sq-2*(float(x1)/c1)*x1+c1*(float(x1)/c1)**2) if c1>1 else "NaN", \
 		1.0/(c2-1)*(x2sq-2*(float(x2)/c2)*x2+c2*(float(x2)/c2)**2) if c2>1 else "NaN", \
@@ -92,6 +94,7 @@ month_data = month_data.map(lambda (label, (x1, c1, x2, c2, x3, c3, x4, c4, x5a,
 		float(x6)/c6/1000. if c6>0 else "NaN", float(x7)/c7/1000. if c7>0 else "NaN",\
 		1.0/(c6-1)*(x6sq-2*(float(x6)/c6)*x6+c6*(float(x6)/c6)**2) if c6>1 else "NaN",\
 		1.0/(c7-1)*(x7sq-2*(float(x7)/c7)*x7+c7*(float(x7)/c7)**2) if c7>1 else "NaN")))
+month_data = month_data.filter(lambda (label, x): math.sqrt(x[18]) < 300 and math.sqrt(x[19]) < 300)
 
 if len(sys.argv) == 2:
 	c = 12
