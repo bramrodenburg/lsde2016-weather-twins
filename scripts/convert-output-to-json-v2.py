@@ -54,7 +54,7 @@ def convert_to_json(fh):
 				return
 		result.append(line)
 
-	return (json.dumps(line), year, month)
+	return (json.dumps(result), year, month)
 
 def process_file(data_file_path, path_to_output):
 	fh = open(data_file_path, 'r')
