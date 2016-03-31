@@ -209,7 +209,7 @@ function generatePopupMessage(station, numberOfMarkers, showButton) {
 	}
 	
 	if (showButton==true) {
-		result += '<button onClick="findWeatherTwins(' + numberOfMarkers + ')">Find weather twins!</button>';
+		result += '<button onClick="findWeatherTwins(' + numberOfMarkers + ')">Find weather twin!</button>';
 	}
 
 	return result;
@@ -252,7 +252,7 @@ function plotStations(json) {
 		plotStation(station);
 		// Max is just for testing to ensure not to many stations are loaded
 		max++;
-		if (max>100) {
+		if (max>1000) {
 			break;
 		}
 	}
