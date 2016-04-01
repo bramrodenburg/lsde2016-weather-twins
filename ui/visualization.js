@@ -9,7 +9,7 @@ var MAP_ATTRIBUTION = "";
 var DEFAULT_ORIGIN_YEAR = DEFAULT_TARGET_YEAR = 2015;
 var DEFAULT_ORIGIN_MONTH = "May";
 var DEFAULT_TARGET_MONTH = "June";
-var DEFAULT_PROPERTIES = [['Avg. Temperature', '&#8451;','avg-temp'], ['Avg. Wind speed', 'm/s', 'avg-wind-speed'], ['Avg. sky', '', 'avg-sky']];
+var DEFAULT_PROPERTIES = [['Avg. Temperature', '&#8451;','avg-temp', 2], ['Avg. Wind speed', 'm/s', 'avg-wind-speed', 2], ['Avg. Cloud height', 'km', 'avg-sky', 3, 0.0001], ['Avg. Wind direction', '&deg;', 'avg-wind-direction', 1, 180/Math.PI, 180], ['Avg. Visibility', 'km', 'avg-visibility', 2, 0.0001]];
 
 var map = L.map('mapid').setView(INITIAL_CENTER, INITIAL_ZOOM_LEVEL);
 var properties = DEFAULT_PROPERTIES;
@@ -194,7 +194,16 @@ function propertyToText(station, property) {
 
 	var name = property[0];
         var unit = property[1];
-        var value = Number(station[property[2]]).toFixed(2);
+	var numberOfDecimals = property[3];
+	var scale = 1;
+	var offset = 0;
+	if (property.length>=5) { // Includes scaling factor
+		scale = property[4];
+	} 
+	if (property.length>=6) {
+		offset = property[5];
+	}
+        var value = Number(station[property[2]]*scale + offset).toFixed(numberOfDecimals);
 	
 	return "<b>" + name + "</b> : " + value + " " + unit + "<br />";
 }
