@@ -3,7 +3,7 @@ import glob
 import sys
 import json
 
-FIELDS = [('avg-temp', 3), ('avg-wind-speed', 4), ('avg-wind-direction', 7), ('avg-sky', 5), ('avg-visibility', 6), ('var-temp', 8), ('var-wind-speed', 9), ('var-sky', 10), ('var-visibility', 11), ('latitude', 22), ('longitude', 23)]
+FIELDS = [('avg-temp', 3), ('avg-wind-speed', 4), ('avg-wind-direction', 7), ('avg-sky', 5), ('avg-visibility', 6), ('var-temp', 8), ('var-wind-speed', 9), ('var-sky', 10), ('var-visibility', 11), ('latitude', 21), ('longitude', 20)]
 
 def create_dir(path):
 	if not os.path.exists(path):
@@ -45,27 +45,34 @@ def convert_to_json(fh):
 
 	extracted_year_month = False
 	for line in fh:
-		if extracted_year_month:
+                if extracted_year_month:
 			line = process_line(line, True)
 		else:
 			(line, year, month) = process_line(line, extracted_year_month)
 			extracted_year_month = True
 			if year == "Error":
-				return
+				return (0,"Error",0)
 		result.append(line)
 
-	return (json.dumps(result), year, month)
+	if extracted_year_month == False:
+		return (0, "Error", 0)
+	else:
+		return (json.dumps(result), year, month)
 
 def process_file(data_file_path, path_to_output):
 	fh = open(data_file_path, 'r')
 
 	(json, year, month) = convert_to_json(fh)
+	if year == "Error":
+		print "Could not process %s ...." % data_file_path
+		return
 	save_file(json, path_to_output, year, month)
 
 	fh.close()
 
 def process_files(path_to_dataset, path_to_output):
 	for data_file_path in os.listdir(path_to_dataset):
+		print "Processing %s ...." % data_file_path
 		process_file(path_to_dataset + data_file_path, path_to_output)
 
 '''
