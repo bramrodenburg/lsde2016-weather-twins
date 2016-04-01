@@ -9,7 +9,7 @@ var MAP_ATTRIBUTION = "";
 var DEFAULT_ORIGIN_YEAR = DEFAULT_TARGET_YEAR = 2015;
 var DEFAULT_ORIGIN_MONTH = "May";
 var DEFAULT_TARGET_MONTH = "June";
-var DEFAULT_PROPERTIES = [['Avg. Temperature', '&#8451;','avg-temp'], ['Avg. Wind speed', 'm/s', 'avg-wind-speed']];
+var DEFAULT_PROPERTIES = [['Avg. Temperature', '&#8451;','avg-temp'], ['Avg. Wind speed', 'm/s', 'avg-wind-speed'], ['Avg. sky', '', 'avg-sky']];
 
 var map = L.map('mapid').setView(INITIAL_CENTER, INITIAL_ZOOM_LEVEL);
 var properties = DEFAULT_PROPERTIES;
@@ -97,7 +97,6 @@ function euclideanDistance(x, y, properties) {
 			return Number.MAX_VALUE;
 		}
 	}
-
 	return Math.sqrt(squaredSum);
 
 }
@@ -106,7 +105,7 @@ function findSimilarWeatherStations(benchmarkStation, includedWeatherAttributes,
 	var mostSimilarStation;
 	loadWeatherStations(targetYear, targetMonth, function(json) {
 		var shortestDistance = Number.MAX_VALUE;
-		var test = 0;
+		
 		for (var key in json) {
                 	var targetStation = json[key];
                 	var distance = euclideanDistance(benchmarkStation, targetStation, includedWeatherAttributes);
@@ -161,13 +160,11 @@ function findWeatherTwins(markerID) {
 
 	var includedWeatherAttributes = getSelectedAttributes();
 	if (includedWeatherAttributes.length == 0) {
-		console.log("Please include at least one attribute for weather comparison.");
+		window.alert("Please include at least one attribute for weather comparison.");
+		return;
 	}
 
-	console.log("ID: " + markerID);
-	console.log(markers[markerID]);
 	var originStation = markers[markerID].options.station;
-	console.log(originStation);
 	var similarWeatherStations = findSimilarWeatherStations(originStation, includedWeatherAttributes, targetYear, targetMonth);
 }
 
@@ -176,6 +173,7 @@ function clearMarkers() {
 		marker = markers[marker];
 		map.removeLayer(marker);
 	}
+	markers = [];
 	numberOfMarkers = 0;
 }
 
