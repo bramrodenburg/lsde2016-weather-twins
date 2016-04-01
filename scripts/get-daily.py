@@ -91,7 +91,7 @@ month_data = month_data.map(lambda (label, (x1, c1, x2, c2, x3, c3, x4, c4, x5a,
 		x2max if x2max != -sys.maxint-1 else "NaN", \
 		x3max if x3max != -sys.maxint-1 else "NaN", \
 		x4max if x4max != -sys.maxint-1 else "NaN", \
-		float(x6)/c6/1000. if c6>0 else "NaN", float(x7)/c7/1000. if c7>0 else "NaN",\
+		float(x6)/c6 if c6>0 else "NaN", float(x7)/c7 if c7>0 else "NaN",\
 		1.0/(c6-1)*(x6sq-2*(float(x6)/c6)*x6+c6*(float(x6)/c6)**2) if c6>1 else "NaN",\
 		1.0/(c7-1)*(x7sq-2*(float(x7)/c7)*x7+c7*(float(x7)/c7)**2) if c7>1 else "NaN")))
 month_data = month_data.filter(lambda (label, x): math.sqrt(x[19]) < 300 and math.sqrt(x[20]) < 300)
